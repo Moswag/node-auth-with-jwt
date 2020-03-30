@@ -23,4 +23,20 @@ app.use(express.json());
 app.use('/api/user', authRoute);
 app.use('/api/posts', postRoute);
 
+//Error handling
+//not found
+app.use((req,res,next)=>{
+    const error=new Error('Not found');
+    error.status=404;
+    next(error);
+});
+//any other type
+app.use((error,req,res,next)=>{
+    res.status(error.status || 500).json({
+        error:{
+            message:error.message
+        }
+    });
+});
+
 app.listen(3000, ()=> console.log('Server running'));
